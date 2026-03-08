@@ -1,3 +1,6 @@
+#----------------------------------***SQLite Tutorial. (n.d.). SQLite Python: Creating New Tables Example. [online] Available at: https://www.sqlitetutorial.net/sqlite-python/creating-tables/.
+
+‌
 import sqlite3
 
 DB_FILE = "student_dss.db"
@@ -68,4 +71,5 @@ if __name__ == "__main__":
     insert_sample_students()
     data = load_students()
     for d in data:
+
         print(d)
