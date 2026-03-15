@@ -405,6 +405,15 @@ def module_distribution():
     plt.title(module + " Grade Distribution")
     plt.show()
 
+# ---------------- ***SORT STUDENTS UI FUNCTION*** ---------------------------
+sort_ascending = True
+
+def sort_students_ui():
+    global students, sort_ascending
+    students = sort_students(students, ascending=sort_ascending)
+    sort_ascending = not sort_ascending
+    refresh_table(students)
+
 #----------***freeCodeCamp.org (2019). Tkinter Course - Create Graphic User Interfaces in Python Tutorial. YouTube. Available at: https://www.youtube.com/watch?v=YXPyB4XeYLA
 #-------------------------***Main Window (Dashboard) UI***-------------------------
 def build_main_window(role):
@@ -413,7 +422,7 @@ def build_main_window(role):
 
     root = tk.Tk()
     root.title("Academic Performance DSS")
-    root.geometry("1100x600")
+    root.geometry("1400x600")
 
     btn_frame = tk.Frame(root)
     btn_frame.pack(pady=10)
@@ -422,14 +431,14 @@ def build_main_window(role):
         tk.Button(btn_frame, text="Import CSV", width=15, command=import_csv).pack(side=tk.LEFT, padx=5)
         tk.Button(btn_frame, text="Refresh", width=15, command=refresh_table_button).pack(side=tk.LEFT, padx=5)
         tk.Button(btn_frame, text="Module Distribution", width=18, command=module_distribution).pack(side=tk.LEFT, padx=5)
-        
+        tk.Button(btn_frame, text="Sort", width=18, command=sort_students_ui).pack(side=tk.LEFT, padx=5)
 
     tk.Button(btn_frame, text="Search Student", width=18, command=search_ui).pack(side=tk.LEFT, padx=5)
     tk.Button(btn_frame, text="At Risk Status", width=18, command=show_at_risk).pack(side=tk.LEFT, padx=5)
     tk.Button(btn_frame, text="Predicted Grade", width=18, command=show_predicted_grade).pack(side=tk.LEFT, padx=5)
     tk.Button(btn_frame, text="Export Report", width=18, command=export_student_report).pack(side=tk.LEFT, padx=5)
     tk.Button(btn_frame, text="Suggested Intervention", width=18, command=show_intervention).pack(side=tk.LEFT, padx=5)
-    tk.Button(btn_frame, text="Close", width=15, command=root.destroy).pack(side=tk.LEFT, padx=5)
+    #tk.Button(root, text="Close", width=15, command=root.destroy).pack(pady=10)
    
     #--------------***ROLE BASED (UI)***--------------------------------------
     if role == "teacher":
