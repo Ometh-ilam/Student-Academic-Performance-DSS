@@ -159,21 +159,56 @@ def search_students(students, search_term):
 
 def search_ui():
     term = simpledialog.askstring("Search", "Enter Student ID or Name")
-    if not term:
+
+    if term is None:
+        return  #------------***FOR CANCEL SEARCH***----------------
+
+    valid, error_message = is_valid_search_term(term)
+
+    if not valid:
+        messagebox.showerror("Invalid Input", error_message)
         return
+
     results = search_students(students, term)
 
     if current_role == "teacher":
-        refresh_table(results)
+        if results:
+            refresh_table(results)
+        else:
+            messagebox.showinfo("No Result", "No student found with that ID or name.")
+
     elif current_role == "parent":
         if results:
-            s = results[0]  # first match
+            s = results[0]  
             messagebox.showinfo(
                 "Student Found",
-                f"Name: {s.name}\nModule: {s.module}\nAverage: {s.average}\nAt Risk: {s.at_risk()}\nPredicted Grade: {s.predicted_grade()}\nSuggested Intervention: {s.suggested_intervention()}"
+                f"Name: {s.name}\n"
+                f"Module: {s.module}\n"
+                f"Average: {s.average}\n"
+                f"At Risk: {s.at_risk()}\n"
+                f"Predicted Grade: {s.predicted_grade()}\n"
+                f"Suggested Intervention: {s.suggested_intervention()}"
             )
         else:
             messagebox.showinfo("No Result", "No student found with that ID or name.")
+
+#----------------------***TO VALIDATE SEARCH TERMS***----------------------------
+def is_valid_search_term(term):
+    term = term.strip()
+
+    #---------------***FOR EMPTY INPUT***------------------------------------
+    if not term:
+        return False, "Search term cannot be empty."
+
+    #--------------***STUDENT ID VALIDATION***---------------------------------
+    if term.replace(" ", "").isalnum():
+        return True, None
+
+    #---------------***STUDENT NAME VALIDATION***--------------------------------
+    if all(c.isalpha() or c.isspace() for c in term):
+        return True, None
+
+    return False, "Invalid search format. Enter a valid name or student ID."
 
 # ---------------- ***SELECT STUDENT*** --------------------------------------------------------
 def get_selected_student():
@@ -374,6 +409,8 @@ def import_csv():
                     1 if row.get("Homework", "Yes").lower() in ["yes","1","true"] else 0
                 ))
 
+    
+
         #-----------------------***SAVE CHANGES AND CLOSE DATABASE***--------------------------
         con.commit()
         con.close()
@@ -389,7 +426,10 @@ def import_csv():
 
     except ValueError:
         messagebox.showerror("Error", "Invalid data format in CSV file.")
-
+    
+    except KeyError as e:
+            messagebox.showerror("CSV Error", f"Missing column: {e}")
+            return
   # ----------------***MODULE DISTRIBUTION FUNCTION***-------- ----------------
 def module_distribution():
     module = simpledialog.askstring("Module", "Enter Module Name")
